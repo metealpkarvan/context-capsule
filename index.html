@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A portable, editable handoff for your next AI conversation."
+    />
+    <meta name="theme-color" content="#14756c" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>Context Capsule — Mete Alp Karvan</title>
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="capsule">
+    <a class="skip" href="#main"
+      ><span data-tr="İçeriğe geç" data-en="Skip to content"
+        >İçeriğe geç</span
+      ></a
+    >
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="./"
+          ><img src="assets/icon.svg" alt="" />Context Capsule</a
+        >
+        <nav class="nav" aria-label="App">
+          <a href="https://github.com/metealpkarvan/context-capsule"
+            >GitHub ↗</a
+          ><button id="language" type="button" class="quiet">EN</button>
+        </nav>
+      </header>
+      <main id="main">
+        <section class="intro">
+          <div>
+            <div class="eyebrow">A SMALL BRIDGE BETWEEN CONVERSATIONS</div>
+            <h1>Context Capsule</h1>
+            <p>
+              <span
+                data-tr="AI sohbetleri arasında taşınabilen, düzenlenebilir bağlam kartları."
+                data-en="A portable, editable handoff for your next AI conversation."
+                >AI sohbetleri arasında taşınabilen, düzenlenebilir bağlam
+                kartları.</span
+              >
+            </p>
+          </div>
+          <span class="pill"
+            ><span
+              data-tr="Hesapsız · cihazında çalışır"
+              data-en="No account · runs on your device"
+              >Hesapsız · cihazında çalışır</span
+            ></span
+          >
+        </section>
+        <div class="grid">
+          <section class="panel">
+            <div class="bar">
+              <h2>
+                <span
+                  data-tr="01 / Bağlamı hazırla"
+                  data-en="01 / Prepare context"
+                  >01 / Bağlamı hazırla</span
+                >
+              </h2>
+              <button id="demo" class="quiet">
+                <span data-tr="Örneği dene" data-en="Try a sample"
+                  >Örneği dene</span
+                >
+              </button>
+            </div>
+            <div class="field">
+              <label for="title"
+                ><span data-tr="Proje adı" data-en="Project name"
+                  >Proje adı</span
+                ></label
+              ><input id="title" maxlength="120" />
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="goal"
+                  ><span
+                    data-tr="Ne yapmak istiyorsun?"
+                    data-en="What is the goal?"
+                    >Ne yapmak istiyorsun?</span
+                  ></label
+                ><textarea id="goal" maxlength="3000"></textarea>
+              </div>
+              <div class="field">
+                <label for="next"
+                  ><span
+                    data-tr="Yeni sohbetin ilk adımı"
+                    data-en="First step in the next chat"
+                    >Yeni sohbetin ilk adımı</span
+                  ></label
+                ><textarea id="next" maxlength="3000"></textarea>
+              </div>
+            </div>
+            <form id="card-form">
+              <div class="row">
+                <div class="field">
+                  <label for="kind"
+                    ><span data-tr="Bilginin türü" data-en="Information type"
+                      >Bilginin türü</span
+                    ></label
+                  ><select id="kind">
+                    <option value="fact" data-en="Fact" data-tr="Bilgi">
+                      Bilgi
+                    </option>
+                    <option value="decision" data-en="Decision" data-tr="Karar">
+                      Karar
+                    </option>
+                    <option value="task" data-en="Task" data-tr="İş">İş</option>
+                    <option value="question" data-en="Question" data-tr="Soru">
+                      Soru
+                    </option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="card-text"
+                    ><span data-tr="Tek bir net bilgi" data-en="One clear item"
+                      >Tek bir net bilgi</span
+                    ></label
+                  ><textarea
+                    id="card-text"
+                    required
+                    maxlength="3000"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="actions">
+                <label class="check"
+                  ><input id="pinned" type="checkbox" /><span
+                    data-tr="Mutlaka taşınsın"
+                    data-en="Must carry over"
+                    >Mutlaka taşınsın</span
+                  ></label
+                ><button class="primary" type="submit" id="add-card">
+                  <span data-tr="Kart ekle" data-en="Add card"
+                    >Kart ekle</span
+                  ></button
+                ><button type="button" id="cancel-edit" hidden>
+                  <span data-tr="Düzenlemeyi bırak" data-en="Cancel edit"
+                    >Düzenlemeyi bırak</span
+                  >
+                </button>
+              </div>
+            </form>
+            <details>
+              <summary>
+                <span
+                  data-tr="Mevcut notlardan kart çıkar"
+                  data-en="Make cards from existing notes"
+                  >Mevcut notlardan kart çıkar</span
+                >
+              </summary>
+              <label for="notes"
+                ><span
+                  data-tr="Her satıra bir bilgi yaz. [D], [T], [Q] tür etiketleri kullanılabilir."
+                  data-en="One item per line. Optional type tags: [D], [T], [Q]."
+                  >Her satıra bir bilgi yaz. [D], [T], [Q] tür etiketleri
+                  kullanılabilir.</span
+                ></label
+              ><textarea id="notes" maxlength="30000"></textarea
+              ><button id="extract">
+                <span
+                  data-tr="Taslak kartlar oluştur"
+                  data-en="Create draft cards"
+                  >Taslak kartlar oluştur</span
+                >
+              </button>
+              <p class="hint">
+                <span
+                  data-tr="Satırlar kuralla ayrılır; AI özeti değildir. Kartları gözden geçirip seç."
+                  data-en="Lines are split by rules, not AI summarization. Review and select the cards."
+                  >Satırlar kuralla ayrılır; AI özeti değildir. Kartları gözden
+                  geçirip seç.</span
+                >
+              </p>
+            </details>
+            <div id="cards" class="stack"></div>
+          </section>
+          <section class="panel">
+            <div class="bar">
+              <h2>
+                <span
+                  data-tr="02 / Taşınabilir paket"
+                  data-en="02 / Portable handoff"
+                  >02 / Taşınabilir paket</span
+                >
+              </h2>
+              <span class="seal">CAPSULE / 001</span>
+            </div>
+            <div class="field">
+              <label for="budget"
+                ><span data-tr="Karakter bütçesi" data-en="Character budget"
+                  >Karakter bütçesi</span
+                ></label
+              ><input
+                id="budget"
+                type="number"
+                min="300"
+                max="12000"
+                step="100"
+                value="3000"
+              />
+            </div>
+            <div class="notice">
+              <span
+                data-tr="Sabit bilgiler korunur. Bütçeye sığmayan diğer kartlar listelenir; metinler sessizce kesilmez."
+                data-en="Pinned information is preserved. Other cards that do not fit are listed; text is never silently truncated."
+                >Sabit bilgiler korunur. Bütçeye sığmayan diğer kartlar
+                listelenir; metinler sessizce kesilmez.</span
+              >
+            </div>
+            <div class="metrics">
+              <div class="metric">
+                <strong id="count">0</strong
+                ><span data-tr="Taşınan kart" data-en="Included cards"
+                  >Taşınan kart</span
+                >
+              </div>
+              <div class="metric">
+                <strong id="chars">0</strong
+                ><span data-tr="Karakter" data-en="Characters">Karakter</span>
+              </div>
+            </div>
+            <pre id="output" class="output" tabindex="0"></pre>
+            <p id="omitted" class="hint"></p>
+            <div class="actions">
+              <button id="copy" class="primary">
+                <span data-tr="Paketi kopyala" data-en="Copy handoff"
+                  >Paketi kopyala</span
+                ></button
+              ><button id="markdown">
+                <span data-tr="Markdown indir" data-en="Download Markdown"
+                  >Markdown indir</span
+                >
+              </button>
+            </div>
+          </section>
+        </div>
+        <div class="toolbar">
+          <button id="backup">
+            <span data-tr="JSON yedek indir" data-en="Download JSON backup"
+              >JSON yedek indir</span
+            ></button
+          ><label
+            for="import"
+            class="visually-hidden"
+            data-tr="Yedek yükle"
+            data-en="Import backup"
+            >Yedek yükle</label
+          ><input
+            id="import"
+            type="file"
+            accept=".json,application/json"
+          /><button id="clear" class="quiet danger">
+            <span data-tr="Yerel veriyi sil" data-en="Clear local data"
+              >Yerel veriyi sil</span
+            >
+          </button>
+        </div>
+      </main>
+      <footer class="footer">
+        <details>
+          <summary>
+            <span
+              data-tr="Nasıl çalışır? Gizlilik ve sınırlar"
+              data-en="How it works · privacy and limits"
+              >Nasıl çalışır? Gizlilik ve sınırlar</span
+            >
+          </summary>
+          <p>
+            <span
+              data-tr="Notlar yalnızca bu tarayıcıdaki yerel depoda saklanır. Yedekler kişisel bilgi içerebilir. Otomatik sohbet erişimi, model entegrasyonu ve kesin token sayımı yoktur; bütçe Unicode karakter sayısıdır. Seçtiğin metni paylaşmadan önce incele."
+              data-en="Notes are stored only in this browser’s local storage. Backups may contain personal information. No automatic chat access, model integration or exact token counting; the budget counts Unicode characters. Review the selected text before sharing."
+              >Notlar yalnızca bu tarayıcıdaki yerel depoda saklanır. Yedekler
+              kişisel bilgi içerebilir. Otomatik sohbet erişimi, model
+              entegrasyonu ve kesin token sayımı yoktur; bütçe Unicode karakter
+              sayısıdır. Seçtiğin metni paylaşmadan önce incele.</span
+            >
+          </p>
+          <p>
+            <span
+              data-tr="Örnek veriler kurgusaldır. Bu bir X/Twitter entegrasyonu değildir. Araştırma kaynakları, tasarım gerekçeleri ve testler GitHub deposunda açıklanır."
+              data-en="Sample data is fictional. This is not an X/Twitter integration. Research sources, design decisions and tests are documented in the repository."
+              >Örnek veriler kurgusaldır. Bu bir X/Twitter entegrasyonu
+              değildir. Araştırma kaynakları, tasarım gerekçeleri ve testler
+              GitHub deposunda açıklanır.</span
+            >
+          </p>
+          <a
+            href="https://github.com/metealpkarvan/context-capsule/blob/main/docs/RESEARCH.md"
+            ><span
+              data-tr="Araştırma notlarını oku"
+              data-en="Read the research notes"
+              >Araştırma notlarını oku</span
+            >
+            ↗</a
+          >
+        </details>
+        <div>© 2026 Mete Alp Karvan · MIT · v1.0.0</div>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
